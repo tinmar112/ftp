@@ -28,4 +28,4 @@ class SinusoidalImage:
 		y = np.linspace(start=y_min, stop=y_max, num=Ny)
 		X, Y = np.meshgrid(x,y)
 
-		return self.signal(X,Y) # type: ignore
+		return (X, Y, self.signal(X,Y)) # type: ignore

@@ -99,13 +99,16 @@ class FTP:
     def _inverse_fft(self) -> None:
         
         ifft = np.fft.ifft2(self.transform) # use the unshifted transform
-        self.inv = np.real(ifft) 
+        self.inv = ifft
     
-    def compute_ftp(self):
+    def compute(self):
 
         self.fft()
 
         self._find_fundamental()
 
-        self._filter(sigma=10/self.fund_y,fc_x=1/self.fund_x, fc_y=1/self.fund_y) # narrow filtering: sigma >> fc
+        # adjust sigma? - # narrow filtering: sigma >> fc
+        self._filter(sigma=10*self.fund_y,fc_x=self.fund_x, fc_y=self.fund_y)
+        
         self._inverse_fft()
+    
