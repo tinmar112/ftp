@@ -9,6 +9,8 @@ class FTP:
         self._step_x = step_x
         self._step_y = step_y
 
+        self._padding = (0, 0)
+
         self.FX: np.ndarray = np.empty(shape=signal.shape, dtype=np.float64)
         self.FY: np.ndarray = np.empty(shape=signal.shape, dtype=np.float64)
         self.transform: np.ndarray = np.empty(shape=signal.shape, dtype=np.complex128)
@@ -24,6 +26,14 @@ class FTP:
 
         self.inv: np.ndarray = np.empty(shape=signal.shape, dtype=np.float64)
     
+    def _pad(self, ratio: float) -> None:
+        """Adds 0-padding to the signal."""
+        p1, p2 = self._signal.shape
+        p1, p2 = int(ratio * p1), int(ratio * p2)
+        self._signal = np.pad(self._signal, pad_width=((p1,p1),(p2,p2)), 
+                              mode='constant', constant_values=0)
+        self._padding = (p1, p2)
+
     def _window(self, window_type: str) -> None:
         dic = {'blackman': np.blackman, 'hamming': np.hamming,'hann': np.hanning}
         window = dic[window_type]
@@ -39,6 +49,7 @@ class FTP:
         """Applies the FTP algorithm to an image (2D Numpy ndarray format)."""
 
         self._window(window_type='hamming')
+        self._pad(ratio=0.1)
         
         # Remove background
         signal = self._signal - self._signal.mean() # Replace with B in real algorithm!

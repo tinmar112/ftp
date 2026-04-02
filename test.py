@@ -20,10 +20,10 @@ def phase0(y: float) -> float:
 
 def phase1(y: float) -> float:
 	"""Phase of deformed surface"""
-	return y**2
+	return 0.5 * y ** 2
 
 # image bounds
-x_min, x_max = 0., 2 * lambda_x
+x_min, x_max = 0., 5 * lambda_x
 y_min, y_max = 0., 10 * p
 Nx, Ny = 1080, 1920
 
@@ -46,7 +46,10 @@ fourier1.compute()
 fourier2.compute()
 
 phase = phase_diff(other_image=fourier2.inv, ref_image=fourier1.inv)
-print(phase)
+# remove padding
+if fourier2._padding != (0,0):
+	p1, p2 = fourier2._padding
+	phase = phase[p1:-p1, p2:-p2]
 
 # phase plotting
 y = Y1[:,0]
