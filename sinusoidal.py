@@ -6,11 +6,11 @@ from typing import Callable
 class SinusoidalImage:
 
 	def __init__(self,
-			  wawelength: float,
+			  wavelength: float,
 			  amplitude: Callable[[float, float], float],
 			  phase: Callable[[float], float]) -> None:
 		
-		self.p = wawelength
+		self.p = wavelength
 		self.A = amplitude
 		self.phase = phase
 

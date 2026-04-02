@@ -23,11 +23,23 @@ class FTP:
         self.filter_coeffs: np.ndarray = np.empty(shape=signal.shape, dtype=np.float64)
 
         self.inv: np.ndarray = np.empty(shape=signal.shape, dtype=np.float64)
-        
+    
+    def _window(self, window_type: str) -> None:
+        dic = {'blackman': np.blackman, 'hamming': np.hamming,'hann': np.hanning}
+        window = dic[window_type]
+
+        (n,m) = self._signal.shape
+        window_x = window(m)
+        window_y = window(n)
+        window_2D = np.outer(window_y, window_x)
+
+        self._signal = self._signal * window_2D
 
     def fft(self) -> None:
         """Applies the FTP algorithm to an image (2D Numpy ndarray format)."""
 
+        self._window(window_type='hamming')
+        
         # Remove background
         signal = self._signal - self._signal.mean() # Replace with B in real algorithm!
         
@@ -108,8 +120,7 @@ class FTP:
 
         self._find_fundamental()
 
-        # adjust sigma? - # narrow filtering: sigma >> fc
-        self._filter(sigma=10*self.fund_y,fc_x=self.fund_x, fc_y=self.fund_y)
+        self._filter(sigma=self.fund_y/4, fc_x=self.fund_x, fc_y=self.fund_y) # narrow filtering
         
         self._inverse_fft()
     

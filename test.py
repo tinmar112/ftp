@@ -20,21 +20,21 @@ def phase0(y: float) -> float:
 
 def phase1(y: float) -> float:
 	"""Phase of deformed surface"""
-	return np.pi
+	return y**2
 
 # image bounds
 x_min, x_max = 0., 2 * lambda_x
 y_min, y_max = 0., 10 * p
-Nx, Ny = 1920, 1080
+Nx, Ny = 1080, 1920
 
 # image generation
 
-X1, Y1, im1 = SinusoidalImage(wawelength=p,
-					 amplitude=A,
-					 phase=phase0).generate(x_min=x_min, x_max=x_max,
+X1, Y1, im1 = SinusoidalImage(wavelength=p,
+						 amplitude=A,
+						 phase=phase0).generate(x_min=x_min, x_max=x_max,
 							 y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
 
-X2, Y2, im2 = SinusoidalImage(wawelength=p,
+X2, Y2, im2 = SinusoidalImage(wavelength=p,
 					 amplitude=A,
 					 phase=phase1).generate(x_min=x_min, x_max=x_max,
 							 y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
