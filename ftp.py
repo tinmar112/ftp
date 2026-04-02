@@ -3,8 +3,9 @@ import numpy as np
 
 class FTP:
 
-    def __init__(self, signal: np.ndarray, step_x: float, step_y: float) -> None:
+    def __init__(self, signal: np.ndarray, name: str, step_x: float, step_y: float) -> None:
         self._signal = signal
+        self._signal_name = name
         self._step_x = step_x
         self._step_y = step_y
 
@@ -78,8 +79,9 @@ class FTP:
         self.fund_x, self.fund_y = self.FX[0,j], self.FY[i,0]
         self.fund_x, self.fund_y = np.abs(self.fund_x), np.abs(self.fund_y) # positive freq
 
+        print(f"---------- Signal: {self._signal_name} ----------")
         print(f"Fundamental wavelength for x: {1/self.fund_x} m")
-        print(f"Fundamental wavelength for y: {1/self.fund_y} m")
+        print(f"Fundamental wavelength for y: {1/self.fund_y} m" + "\n")
 
     def _filter(self, sigma: float, fc_x: float, fc_y: float) -> None:
 
@@ -88,7 +90,7 @@ class FTP:
             g_x = np.exp(-(x-fc_x)**2/(2*sigma**2))
             g_y = np.exp(-(y-fc_y)**2/(2*sigma**2))
 
-            return g_x * g_y # should be 1/(2*np.pi*sigma**2) - I want a gain of 1 at fc_x/y
+            return g_x * g_y # should be 1/(2*np.pi*sigma**2) - I want a gain of 1 at fc_x
         
         filter = np.vectorize(filter)
 
@@ -98,8 +100,7 @@ class FTP:
 
     def _inverse_fft(self) -> None:
         
-        ifft = np.fft.ifft2(self.transform) # use the unshifted transform
-        self.inv = ifft
+        self.inv = np.fft.ifft2(self.transform) # use the unshifted transform
     
     def compute(self):
 
