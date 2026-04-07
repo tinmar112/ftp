@@ -2,12 +2,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from ftp import FTP
+from height import height
 from sinusoidal import SinusoidalImage
 from phase_diff import phase_diff
 
 # parameters
 lambda_x = 3e-3
 p = 5e-3
+L = 0.5
+D = 0.25
 
 def A(x: float, y: float) -> float:
 	"""Amplitude of the sine wave"""
@@ -20,11 +23,16 @@ def phase0(y: float) -> float:
 
 def phase1(y: float) -> float:
 	"""Phase of deformed surface"""
-	return 0.5 * y ** 2
+	#h = 0.01 * np.sin((2*np.pi/p) * y) # surface profile
+	#return (((2*np.pi*D)/p) * h)/(h - L)
+	if -p/2 <= y <= p/2:
+		return -0.01 * 0.5 * (1 + np.cos((2*np.pi/p) * y))
+	else:
+		return 0.
 
 # image bounds
-x_min, x_max = 0., 5 * lambda_x
-y_min, y_max = 0., 10 * p
+x_min, x_max = -2 * lambda_x, 2 * lambda_x
+y_min, y_max = -3 * p, 3 * p
 Nx, Ny = 1080, 1920
 
 # image generation
@@ -53,11 +61,12 @@ if fourier2._padding != (0,0):
 
 # phase plotting
 y = Y1[:,0]
+
 phase1 = np.vectorize(phase1)
-plt.plot(y, phase[:,0], label=r'Reconstructed $\Delta \phi$')
+plt.plot(y, phase[:,0].T, label=r'Reconstructed $\Delta \phi$')
 plt.plot(y, phase1(y), label=r'True $\Delta \phi$')
 plt.xlabel(r'$y \: (m)$')
 plt.ylabel(r'$\Delta \phi \: (rad)$')
 plt.legend()
-plt.title(f'$p = {p}$ m, linear phase')
+plt.title(f'$p = {p}$ m')
 plt.show()
