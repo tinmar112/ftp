@@ -31,8 +31,8 @@ def phase1(y: float) -> float:
 		return 0.
 
 # image bounds
-x_min, x_max = -2 * lambda_x, 2 * lambda_x
-y_min, y_max = -3 * p, 3 * p
+x_min, x_max = -3 * lambda_x, 3 * lambda_x
+y_min, y_max = -5 * p, 5 * p
 Nx, Ny = 1080, 1920
 
 # image generation
@@ -47,11 +47,20 @@ X2, Y2, im2 = SinusoidalImage(wavelength=p,
 					 phase=phase1).generate(x_min=x_min, x_max=x_max,
 							 y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
 
-fourier1 = FTP(im1, name='Reference Image', step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny)
-fourier2 = FTP(im2, name='Other Image', step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny)
+fourier1 = FTP(im1, name='Reference Image', step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
+			   window='hamming', padding=0.025, filter_width=1.)
+
+fourier2 = FTP(im2, name='Other Image', step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
+			   window='hamming', padding=0.025, filter_width=1.)
 
 fourier1.compute()
+print(f"---------- Signal: {'Reference Image'} ----------")
+print(f"Fundamental wavelength for x: {1/fourier1.fund_x} m")
+print(f"Fundamental wavelength for y: {1/fourier1.fund_y} m" + "\n")
 fourier2.compute()
+print(f"---------- Signal: {'Other Image'} ----------")
+print(f"Fundamental wavelength for x: {1/fourier2.fund_x} m")
+print(f"Fundamental wavelength for y: {1/fourier2.fund_y} m" + "\n")
 
 phase = phase_diff(other_image=fourier2.inv, ref_image=fourier1.inv)
 # remove padding
