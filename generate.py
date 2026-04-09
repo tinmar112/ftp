@@ -28,7 +28,7 @@ Nx, Ny = 500, 500
 
 # image generation
 
-image = SinusoidalImage(wawelength=p,
+image = SinusoidalImage(wavelength=p,
 						amplitude=A,
 						phase=phase0).generate(x_min=x_min, x_max=x_max,
 							 y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
