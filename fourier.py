@@ -9,7 +9,7 @@ class Fourier:
         self._step_x = step_x
         self._step_y = step_y
         
-        self._Window = window
+        self._window = window
         self._pad_ratio = padding
         self._padding = (0, 0)
 
@@ -42,8 +42,8 @@ class Fourier:
                'hann': np.hanning}
 
         (n,m) = self._signal.shape
-        window_x = dic[self._Window](m)
-        window_y = dic[self._Window](n)
+        window_x = dic[self._window](m)
+        window_y = dic[self._window](n)
         window_2D = np.outer(window_y, window_x)
 
         self._signal = self._signal * window_2D
