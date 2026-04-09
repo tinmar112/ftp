@@ -15,17 +15,25 @@ def phase0(y: float) -> float:
 	"""Reference phase"""
 	return 0
 
-def phase(y: float) -> float:
+def phase_const(y: float) -> float:
 	return np.pi/2
-phase = np.vectorize(phase)
+phase_const = np.vectorize(phase_const)
 
-def phase2(y: float) -> float:
+def phase_square(y: float) -> float:
+	return 0.5 * y ** 2
+phase_square = np.vectorize(phase_square)
+
+def phase_sine(y: float) -> float:
+	return 0.1 * np.sin(300*y)
+phase_sine = np.vectorize(phase_sine)
+
+def phase_dimple(y: float) -> float:
 	"""Phase of deformed surface"""
 	if -p/2 <= y <= p/2:
 		return -0.01 * 0.5 * (1 + np.cos((2*np.pi/p) * y))
 	else:
 		return 0.
-phase2 = np.vectorize(phase2)
+phase_dimple = np.vectorize(phase_dimple)
 
 # image bounds
 x_min, x_max = -2.5 * lambda_x, 2.5 * lambda_x

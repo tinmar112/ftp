@@ -1,11 +1,12 @@
 import numpy as np
+from typing import Callable
 
 from ftp import FTP
 from sinusoidal import SinusoidalImage
 
-from parameters import p, A, phase0, phase, x_min, x_max, y_min, y_max, Nx, Ny
+from parameters import p, A, phase0, x_min, x_max, y_min, y_max, Nx, Ny
 
-def grid_search(params: dict) -> tuple[tuple,float]:
+def grid_search(phase: Callable[[float], float], params: dict) -> tuple[tuple,float]:
     
     X0, Y0, im0 = SinusoidalImage(wavelength=p,
                                   amplitude=A,

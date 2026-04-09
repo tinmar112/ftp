@@ -1,33 +1,36 @@
 import matplotlib.pyplot as plt
+from typing import Callable
 
 from ftp import FTP
 from sinusoidal import SinusoidalImage
 
-from parameters import p, A, phase0, phase, x_min, x_max, y_min, y_max, Nx, Ny
+from parameters import p, A, phase0, x_min, x_max, y_min, y_max, Nx, Ny
 
-# image generation
-X0, Y0, im0 = SinusoidalImage(wavelength=p,
-						 amplitude=A,
-						 phase=phase0).generate(x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
-X, Y, im = SinusoidalImage(wavelength=p,
-					 amplitude=A,
-					 phase=phase).generate(x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
+def test(phase: Callable[[float], float], window: str, padding: float, filter_width: float) -> None:
+    
+	# image generation
+	X0, Y0, im0 = SinusoidalImage(wavelength=p,
+							   amplitude=A,
+							   phase=phase0).generate(x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
+	X, Y, im = SinusoidalImage(wavelength=p,
+						amplitude=A,
+						phase=phase).generate(x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
 
-# FTP algorithm
-ftp = FTP(image=im, image_ref=im0, step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
-		  window='hamming', padding=0.1, filter_width=0.9444)
+	# FTP algorithm
+	ftp = FTP(image=im, image_ref=im0, step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
+		   window=window, padding=padding, filter_width=filter_width)
 
-ftp.compute()
+	ftp.compute()
 
-delta_phi = ftp.phase_diff()
+	delta_phi = ftp.phase_diff()
 
-# results plotting
-y = Y0[:,0]
+	# results plotting
+	y = Y0[:,0]
 
-plt.plot(y, delta_phi[:,0].T, label=r'Reconstructed $\Delta \phi$')
-plt.plot(y, phase(y), label=r'True $\Delta \phi$')
-plt.xlabel(r'$y \: (m)$')
-plt.ylabel(r'$\Delta \phi \: (rad)$')
-plt.legend()
-plt.title(f'$p = {p}$ m')
-plt.show()
+	plt.plot(y, delta_phi[:,0].T, label=r'Reconstructed $\Delta \phi$')
+	plt.plot(y, phase(y), label=r'True $\Delta \phi$')
+	plt.xlabel(r'$y \: (m)$')
+	plt.ylabel(r'$\Delta \phi \: (rad)$')
+	plt.legend()
+	plt.title(f'$p = {p}$ m')
+	plt.show()
