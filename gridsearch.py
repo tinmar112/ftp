@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm # type: ignore
 from typing import Callable
 
 from ftp import FTP
@@ -21,11 +22,11 @@ def grid_search(phase: Callable[[float], float], params: dict) -> tuple[tuple,fl
     grid = [(window, padding, filter_width) for window in params['window'] for padding in params['padding'] for filter_width in params['filter_width']]
     res, min = (None, None, None), np.inf
     
-    for (window, padding, filter_width) in grid:
+    for (window, padding, filter_width) in tqdm(grid):
         
         ftp = FTP(image=im, image_ref=im0, step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
 		  window=window, padding=padding, filter_width=filter_width)
-        ftp.compute()
+        ftp.compute(verbose=False)
         delta_phi = ftp.phase_diff()
 
         score = np.linalg.norm(delta_phi[:,0]-phase(Y[:,0]), ord=2)

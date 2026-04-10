@@ -30,9 +30,11 @@ phase_sine = np.vectorize(phase_sine)
 def phase_dimple(y: float) -> float:
 	"""Phase of deformed surface"""
 	if -p/2 <= y <= p/2:
-		return -0.01 * 0.5 * (1 + np.cos((2*np.pi/p) * y))
+		h = -0.001 * 0.5 * (1 + np.cos((2*np.pi/p) * y))
 	else:
-		return 0.
+		h = 0.
+	return ((2*np.pi/p * D) * h) / (h - L)
+
 phase_dimple = np.vectorize(phase_dimple)
 
 # image bounds
