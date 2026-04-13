@@ -6,7 +6,7 @@ from sinusoidal import SinusoidalImage
 
 from parameters import p, A, phase0, x_min, x_max, y_min, y_max, Nx, Ny
 
-def test(phase: Callable[[float], float], window: str, padding: float, filter_width: float) -> None:
+def test(phase: Callable[[float], float], window: str, padding: float | None, filter_width: float) -> None:
     
 	# image generation
 	X0, Y0, im0 = SinusoidalImage(wavelength=p,
@@ -27,7 +27,7 @@ def test(phase: Callable[[float], float], window: str, padding: float, filter_wi
 	# results plotting
 	y = Y0[:,0]
 
-	plt.plot(y, delta_phi[:,0].T, label=r'Reconstructed $\Delta \phi$')
+	plt.plot(y, delta_phi[:,0], label=r'Reconstructed $\Delta \phi$')
 	plt.plot(y, phase(y), label=r'True $\Delta \phi$')
 	plt.xlabel(r'$y \: (m)$')
 	plt.ylabel(r'$\Delta \phi \: (rad)$')

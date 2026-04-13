@@ -14,12 +14,8 @@ class SinusoidalImage:
 		self.A = amplitude
 		self.phase = phase
 
-	def __signal(self, x: float, y: float) -> float:
+	def signal(self, x: float, y: float) -> float:
 		return self.A(x,y) * np.cos((2*np.pi/self.p) * y + self.phase(y))
-	
-	@property
-	def signal(self) -> Callable[[float, float], float]:
-		return np.vectorize(self.__signal)
 	
 	def generate(self, x_min: float, x_max: float, y_min: float, y_max: float,
 		  Nx: int, Ny: int) -> np.ndarray:

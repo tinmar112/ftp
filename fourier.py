@@ -4,14 +4,14 @@ import numpy as np
 class Fourier:
 
     def __init__(self, signal: np.ndarray, step_x: float, step_y: float,
-                 window: str, padding: float = 0.1, filter_width: float=4) -> None:
+                 window: str, padding: float | None, filter_width: float=4) -> None:
         self._signal = signal
         self._step_x = step_x
         self._step_y = step_y
         
         self._window = window
-        self._pad_ratio = padding
-        self._padding = (0, 0)
+        self._padding = padding
+        self._pad_tuple = (0, 0)
 
         self.FX: np.ndarray = np.empty(shape=signal.shape, dtype=np.float64)
         self.FY: np.ndarray = np.empty(shape=signal.shape, dtype=np.float64)
@@ -31,11 +31,12 @@ class Fourier:
     
     def pad(self) -> None:
         """Adds 0-padding to the signal."""
+        assert self._padding is not None
         p1, p2 = self._signal.shape
-        p1, p2 = int(self._pad_ratio * p1), int(self._pad_ratio * p2)
+        p1, p2 = int(self._padding * p1), int(self._padding * p2)
         self._signal = np.pad(self._signal, pad_width=((p1,p1),(p2,p2)), 
                               mode='constant', constant_values=0)
-        self._padding = (p1, p2)
+        self._pad_tuple = (p1, p2)
 
     def window(self) -> None:
         dic = {'blackman': np.blackman, 'hamming': np.hamming,
@@ -50,8 +51,6 @@ class Fourier:
 
     def fft(self) -> None:
         """Applies the FTP algorithm to an image (2D Numpy ndarray format)."""
-        
-        self.window()
 
         # Remove background
         signal = self._signal - np.mean(self._signal) # Replace with B in real algorithm!
@@ -96,7 +95,7 @@ class Fourier:
         plt.tight_layout()
         plt.show()
 
-    def _find_fundamental(self):
+    def find_fundamental(self):
         """Find the fundamental frequencies for both axes"""
 
         module = np.abs(self.transform)
@@ -104,7 +103,7 @@ class Fourier:
         self.fund_x, self.fund_y = self.FX[0,j], self.FY[i,0]
         self.fund_x, self.fund_y = np.abs(self.fund_x), np.abs(self.fund_y) # positive freq
 
-    def _filter(self) -> None:
+    def filter(self) -> None:
 
         sigma = self._filter_width * self.fund_y
         
@@ -121,7 +120,11 @@ class Fourier:
         self.transform = coefficients * self.transform # element-wise multiplication
         #self.transform = self.transform / np.sum(coefficients**2) # normalise to preserve energy!
 
-    def _inverse_fft(self) -> None:
+    def inverse_fft(self) -> None:
         
         self.inv = np.fft.ifft2(self.transform) # use the unshifted transform
-    
+
+    def unpad(self) -> None:
+        assert self._padding is not None
+        (p1, p2) = self._pad_tuple
+        self.inv = self.inv[p1:-p1, p2:-p2]

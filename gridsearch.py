@@ -23,6 +23,7 @@ def grid_search(phase: Callable[[float], float], params: dict) -> tuple[tuple,fl
     res, min = (None, None, None), np.inf
     
     for (window, padding, filter_width) in tqdm(grid):
+        print(f'Testing params: {window, padding, filter_width}')
         
         ftp = FTP(image=im, image_ref=im0, step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
 		  window=window, padding=padding, filter_width=filter_width)

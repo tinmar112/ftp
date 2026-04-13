@@ -6,6 +6,7 @@ p = 5e-3
 L = 0.5
 D = 0.25
 
+# callables
 def A(x: float, y: float) -> float:
 	"""Amplitude of the sine wave"""
 	return np.cos((2*np.pi/lambda_x)*x)
@@ -14,6 +15,7 @@ def A(x: float, y: float) -> float:
 def phase0(y: float) -> float:
 	"""Reference phase"""
 	return 0
+phase0 = np.vectorize(phase0)
 
 def phase_const(y: float) -> float:
 	return np.pi/2
@@ -34,7 +36,6 @@ def phase_dimple(y: float) -> float:
 	else:
 		h = 0.
 	return ((2*np.pi/p * D) * h) / (h - L)
-
 phase_dimple = np.vectorize(phase_dimple)
 
 # image bounds
