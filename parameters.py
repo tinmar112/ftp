@@ -2,7 +2,7 @@ import numpy as np
 
 # parameters
 lambda_x = 1e-2
-p = 5e-3
+p = 1.4e-3 # 7 fringes per deformation (deformation ~ 10mm)
 L = 0.5
 D = 0.25
 
@@ -33,14 +33,14 @@ phase_sine = np.vectorize(phase_sine)
 
 def phase_dimple(y: float) -> float:
 	"""Phase of deformed surface"""
-	if -p/2 <= y <= p/2:
-		h = -0.001 * 0.5 * (1 + np.cos((2*np.pi/p) * y))
+	if -5e-3 <= y <= 5e-3:
+		h = -0.001 * 0.5 * (1 + np.cos((2*np.pi/1e-2) * y))
 	else:
 		h = 0.
 	return ((2*np.pi/p * D) * h) / (h - L)
 phase_dimple = np.vectorize(phase_dimple)
 
-# image bounds
-x_min, x_max = -2.5 * lambda_x, 2.5 * lambda_x
-y_min, y_max = -5 * p, 5 * p
+# image bounds - as per projector resolution
+x_min, x_max = -1.4e-2, 1.4e-2
+y_min, y_max = -2.5e-2, 2.5e-2
 Nx, Ny = 1080, 1920
