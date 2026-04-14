@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from typing import Callable
 
 from ftp import FTP
@@ -26,9 +27,11 @@ def test(phase: Callable[[float], float], window: str, padding: float | None, fi
 
 	# results plotting
 	y = Y0[:,0]
-
-	plt.plot(y, delta_phi[:,0], label=r'Reconstructed $\Delta \phi$')
-	plt.plot(y, phase(y), label=r'True $\Delta \phi$')
+	true_phase, reconstructed = phase(y), delta_phi[:,0]
+	print(f'Mean L2-error: {np.linalg.norm(reconstructed-true_phase, ord=2)/reconstructed.size}')
+	
+	plt.plot(y, reconstructed, label=r'Reconstructed $\Delta \phi$')
+	plt.plot(y, true_phase, label=r'True $\Delta \phi$')
 	plt.xlabel(r'$y \: (m)$')
 	plt.ylabel(r'$\Delta \phi \: (rad)$')
 	plt.legend()

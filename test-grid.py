@@ -1,13 +1,13 @@
 import numpy as np
 
 from gridsearch import grid_search
-from parameters import phase_square
+from parameters import phase_linear
 
-params={'window': ['hann', 'hamming', 'blackman'],
-        'padding': [None, 0.1],
-        'filter_width': np.linspace(0.5, 2., num=4)}
+params={'window': ['hamming'],
+        'padding': [None, 0.1, 0.25],
+        'filter_width': np.linspace(0.1, 1., num=10)}
 
-(res, min) = grid_search(phase=phase_square, params=params)
+(res, min) = grid_search(phase=phase_linear, params=params)
 
 print(f'Best parameters: {res}')
 print(f'Minimum L2-error: {min}')

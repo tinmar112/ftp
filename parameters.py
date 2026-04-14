@@ -9,7 +9,8 @@ D = 0.25
 # callables
 def A(x: float, y: float) -> float:
 	"""Amplitude of the sine wave"""
-	return np.cos((2*np.pi/lambda_x)*x)
+	return 1.
+A = np.vectorize(A)
 
 # translation invariance along x: phase independent of x
 def phase0(y: float) -> float:
@@ -17,9 +18,10 @@ def phase0(y: float) -> float:
 	return 0
 phase0 = np.vectorize(phase0)
 
-def phase_const(y: float) -> float:
-	return np.pi/2
-phase_const = np.vectorize(phase_const)
+def phase_linear(y: float) -> float:
+	lambda_y = 5e-1
+	return (2*np.pi/lambda_y) * y
+phase_const = np.vectorize(phase_linear)
 
 def phase_square(y: float) -> float:
 	return 0.5 * y ** 2
