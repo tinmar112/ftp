@@ -7,7 +7,7 @@ from sinusoidal import SinusoidalImage
 
 from parameters import p, A, phase0, x_min, x_max, y_min, y_max, Nx, Ny
 
-def test(phase: Callable[[float], float], window: str, padding: float | None, filter_width: float) -> None:
+def test(phase: Callable[[float], float], window: float, padding: float | None, filter_width: float) -> None:
     
 	# image generation
 	X0, Y0, im0 = SinusoidalImage(wavelength=p,

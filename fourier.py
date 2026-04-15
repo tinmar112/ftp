@@ -4,7 +4,7 @@ import numpy as np
 class Fourier:
 
     def __init__(self, signal: np.ndarray, step_x: float, step_y: float,
-                 window: str, padding: float | None, filter_width: float=4) -> None:
+                 window: float, padding: float | None, filter_width: float=4) -> None:
         self._signal = signal
         self._step_x = step_x
         self._step_y = step_y
@@ -39,12 +39,10 @@ class Fourier:
         self._pad_tuple = (p1, p2)
 
     def window(self) -> None:
-        dic = {'blackman': np.blackman, 'hamming': np.hamming,
-               'hann': np.hanning}
 
         (n,m) = self._signal.shape
-        window_x = dic[self._window](m)
-        window_y = dic[self._window](n)
+        window_x = np.kaiser(m, beta=self._window)
+        window_y = np.kaiser(n, beta=self._window)
         window_2D = np.outer(window_y, window_x)
 
         self._signal = self._signal * window_2D
@@ -102,6 +100,17 @@ class Fourier:
         (i,j) = np.unravel_index(module.argmax(), module.shape)
         self.fund_x, self.fund_y = self.FX[0,j], self.FY[i,0]
         self.fund_x, self.fund_y = np.abs(self.fund_x), np.abs(self.fund_y) # positive freq
+
+    def low_pass_filter(self) -> None:
+        """Apply a Gaussian low-pass filter in the frequency domain."""
+
+        # choose a low-pass width relative to the maximum frequency extent
+        max_freq = max(np.abs(self.FX).max(), np.abs(self.FY).max())
+        sigma = self._filter_width * max_freq / 4
+
+        radius2 = self.FX**2 + self.FY**2
+        self.filter_coeffs = np.exp(-radius2 / (2 * sigma**2))
+        self.transform *= self.filter_coeffs
 
     def filter(self) -> None:
 

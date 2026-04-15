@@ -21,7 +21,7 @@ phase0 = np.vectorize(phase0)
 def phase_linear(y: float) -> float:
 	lambda_y = 5e-1
 	return (2*np.pi/lambda_y) * y
-phase_const = np.vectorize(phase_linear)
+phase_linear = np.vectorize(phase_linear)
 
 def phase_square(y: float) -> float:
 	return 0.5 * y ** 2
