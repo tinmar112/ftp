@@ -4,12 +4,13 @@ import numpy as np
 class Fourier:
 
     def __init__(self, signal: np.ndarray, step_x: float, step_y: float,
-                 window: float, padding: float | None, filter_width: float=4) -> None:
+                 window_beta: float, padding: float | None,
+                 filter_width: float=4) -> None:
         self._signal = signal
         self._step_x = step_x
         self._step_y = step_y
         
-        self._window = window
+        self._window_beta = window_beta
         self._padding = padding
         self._pad_tuple = (0, 0)
 
@@ -41,8 +42,8 @@ class Fourier:
     def window(self) -> None:
 
         (n,m) = self._signal.shape
-        window_x = np.kaiser(m, beta=self._window)
-        window_y = np.kaiser(n, beta=self._window)
+        window_x = np.kaiser(m, beta=self._window_beta)
+        window_y = np.kaiser(n, beta=self._window_beta)
         window_2D = np.outer(window_y, window_x)
 
         self._signal = self._signal * window_2D
@@ -72,25 +73,14 @@ class Fourier:
     def plot(self) -> None:
         """Plots frequency modules along each axis -- x and y."""
 
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-
-        # along x-axis (sum over y)
-        module_x = np.abs(self.transform_shifted.sum(axis=0))
-        ax1.plot(self.FX_shifted[0, :], module_x)
-        ax1.set_xlabel('Frequency (Hz)')
-        ax1.set_ylabel('Magnitude')
-        ax1.set_title('x-axis')
-        ax1.grid(True)
-
-        # along y-axis (sum over x)
-        module_y = np.abs(self.transform_shifted.sum(axis=1))
-        ax2.plot(self.FY_shifted[:, 0], module_y)
-        ax2.set_xlabel('Frequency (Hz)')
-        ax2.set_ylabel('Magnitude')
-        ax2.set_title('y-axis')
-        ax2.grid(True)
-
-        plt.tight_layout()
+        spectrum = 20 * np.log10(np.abs(self.transform_shifted))
+        extent = (self.FX_shifted.min(), self.FX_shifted.max(), 
+                  self.FY_shifted.min(), self.FY_shifted.max())
+        plt.imshow(spectrum, cmap='jet', extent=extent, aspect='auto')
+        plt.title('Frequency Spectrum')
+        plt.xlabel(r'$f_x \: (Hz)$')
+        plt.ylabel(r'$f_y \: (Hz)$')
+        plt.colorbar()
         plt.show()
 
     def find_fundamental(self):
