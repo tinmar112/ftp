@@ -28,7 +28,8 @@ def phase_square(y: float) -> float:
 phase_square = np.vectorize(phase_square)
 
 def phase_sine(y: float) -> float:
-	return 0.1 * np.sin(300*y)
+	h = 0.001 * np.sin((2*np.pi/0.0125) * y)
+	return ((((2*np.pi)/p) * D) * h) / (h - L)
 phase_sine = np.vectorize(phase_sine)
 
 def phase_dimple(y: float) -> float:
@@ -37,7 +38,7 @@ def phase_dimple(y: float) -> float:
 		h = -0.001 * 0.5 * (1 + np.cos((2*np.pi/1e-2) * y))
 	else:
 		h = 0.
-	return ((2*np.pi/p * D) * h) / (h - L)
+	return ((((2*np.pi)/p) * D) * h) / (h - L)
 phase_dimple = np.vectorize(phase_dimple)
 
 # image bounds - as per projector resolution

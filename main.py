@@ -1,5 +1,5 @@
 from test import test
-from parameters import phase_dimple as phase
+from parameters import phase_linear as phase
 
 if __name__ == '__main__':
-    test(phase=phase, window_beta=6, padding=0.1, filter_width=0.6)
+    test(phase=phase, window_beta=5, padding=0.1, filter_width=0.2)

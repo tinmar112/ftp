@@ -1,4 +1,5 @@
 import numpy as np
+
 from skimage.restoration import unwrap_phase
 
 from fourier import Fourier
@@ -22,7 +23,7 @@ class FTP:
         self._fourier0.pad() if self._fourier0._padding is not None else None
         self._fourier0.fft()
         #self._fourier0.low_pass_filter()
-        self._fourier0.plot()
+        #self._fourier0.plot()
         self._fourier0.find_fundamental()
         self._fourier0.filter()
         self._fourier0.inverse_fft()
@@ -32,7 +33,7 @@ class FTP:
         self._fourier.pad() if self._fourier._padding is not None else None
         self._fourier.fft()
         #self._fourier0.low_pass_filter()
-        self._fourier.plot()
+        #self._fourier.plot()
         self._fourier.find_fundamental()
         self._fourier.filter()
         self._fourier.inverse_fft()
@@ -52,7 +53,7 @@ class FTP:
         other_image, ref_image = self._fourier.inv, self._fourier0.inv
 
         prod = other_image * np.conjugate(ref_image)
-        delta_phi = np.imag(np.log(prod))
+        delta_phi = np.angle(prod)
 
         delta_phi = unwrap_phase(delta_phi)
 

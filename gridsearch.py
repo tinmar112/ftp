@@ -19,14 +19,14 @@ def grid_search(phase: Callable[[float], float], params: dict) -> tuple[tuple,fl
                                phase=phase).generate(x_min=x_min, x_max=x_max,
                                                       y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
 
-    grid = [(window, padding, filter_width) for window in params['window'] for padding in params['padding'] for filter_width in params['filter_width']]
+    grid = [(window_beta, padding, filter_width) for window_beta in params['window_beta'] for padding in params['padding'] for filter_width in params['filter_width']]
     res, min = (None, None, None), np.inf
     
-    for (window, padding, filter_width) in tqdm(grid):
-        print(f'Testing params: {window, padding, filter_width}')
+    for (window_beta, padding, filter_width) in tqdm(grid):
+        print(f'Testing params: {window_beta, padding, filter_width}')
         
         ftp = FTP(image=im, image_ref=im0, step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
-		  window=window, padding=padding, filter_width=filter_width)
+		  window_beta=window_beta, padding=padding, filter_width=filter_width)
         ftp.compute(verbose=False)
         delta_phi = ftp.phase_diff()
 
@@ -34,6 +34,6 @@ def grid_search(phase: Callable[[float], float], params: dict) -> tuple[tuple,fl
         
         if score < min:
             min = score # type: ignore
-            res = (window, padding, filter_width)
+            res = (window_beta, padding, filter_width)
 
     return (res, min) # type: ignore
