@@ -1,4 +1,3 @@
-import pandas as pd # type: ignore
 import numpy as np
 from tqdm import tqdm # type: ignore
 from typing import Callable
