@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def height(delta_phi: np.ndarray, p: float, L: float, D: float) -> np.ndarray:
     """Reconstructs the height based on phase readings."""
     num = L * delta_phi

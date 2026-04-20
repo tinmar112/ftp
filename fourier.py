@@ -40,6 +40,7 @@ class Fourier:
         self._pad_tuple = (p1, p2)
 
     def window(self) -> None:
+        """Applies a Kaiser window to the image."""
 
         (n,m) = self._signal.shape
         window_x = np.kaiser(m, beta=self._window_beta)
@@ -73,7 +74,8 @@ class Fourier:
     def plot(self) -> None:
         """Plots frequency modules along each axis -- x and y."""
 
-        spectrum = 20 * np.log10(np.abs(self.transform_shifted))
+        spectrum = 20 * np.log10(np.abs(self.transform_shifted)) # dB scale
+
         extent = (self.FX_shifted.min(), self.FX_shifted.max(), 
                   self.FY_shifted.min(), self.FY_shifted.max())
         plt.imshow(spectrum, cmap='jet', extent=extent, aspect='auto')
@@ -84,46 +86,31 @@ class Fourier:
         plt.show()
 
     def find_fundamental(self):
-        """Find the fundamental frequencies for both axes"""
+        """Finds the fundamental frequencies for both axes."""
 
         module = np.abs(self.transform)
         (i,j) = np.unravel_index(module.argmax(), module.shape)
         self.fund_x, self.fund_y = self.FX[0,j], self.FY[i,0]
         self.fund_x, self.fund_y = np.abs(self.fund_x), np.abs(self.fund_y) # positive freq
 
-    def low_pass_filter(self) -> None:
-        """Apply a Gaussian low-pass filter in the frequency domain."""
-
-        # choose a low-pass width relative to the maximum frequency extent
-        max_freq = max(np.abs(self.FX).max(), np.abs(self.FY).max())
-        sigma = self._filter_width * max_freq / 4
-
-        radius2 = self.FX**2 + self.FY**2
-        self.filter_coeffs = np.exp(-radius2 / (2 * sigma**2))
-        self.transform *= self.filter_coeffs
-
     def filter(self) -> None:
+        """Filters out the fundamental frequencies."""
 
         sigma = self._filter_width * self.fund_y
+
+        G_X = np.exp(-(self.FX - self.fund_x)**2/(2 * sigma ** 2))
+        G_Y = np.exp(-(self.FY - self.fund_y)**2/(2 * sigma ** 2))
         
-        def filter(x: float, y: float) -> float:
-
-            g_x = np.exp(-(x-self.fund_x)**2/(2*sigma**2))
-            g_y = np.exp(-(y-self.fund_y)**2/(2*sigma**2))
-
-            return g_x * g_y
-        
-        filter = np.vectorize(filter)
-
-        coefficients = filter(self.FX, self.FY)
+        coefficients = G_X * G_Y
         self.transform = coefficients * self.transform # element-wise multiplication
-        #self.transform = self.transform / np.sum(coefficients**2) # normalise to preserve energy!
-
+        
     def inverse_fft(self) -> None:
+        """Computes the inverse FFT of the processed image."""
         
         self.inv = np.fft.ifft2(self.transform) # use the unshifted transform
 
     def unpad(self) -> None:
+        """Removes padding."""
         assert self._padding is not None
         (p1, p2) = self._pad_tuple
         self.inv = self.inv[p1:-p1, p2:-p2]

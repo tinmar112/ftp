@@ -8,6 +8,7 @@ from height import height
 
 from parameters import p, L, D, A, phase0, x_min, x_max, y_min, y_max, Nx, Ny
 
+
 def test(phase: Callable[[float], float], window_beta: float,
 		 padding: float | None, filter_width: float) -> None:
     
@@ -33,10 +34,10 @@ def test(phase: Callable[[float], float], window_beta: float,
 	true_phase = phase(y)
 	reconstructed = delta_phi[:,0]
 
-	print(f'Mean L2-error: {np.linalg.norm(reconstructed-true_phase, ord=2)/reconstructed.size}')
+	print(f'Mean L2-error in phase: {np.linalg.norm(reconstructed-true_phase, ord=2)/reconstructed.size}')
 
 	i = np.argmax(np.abs(true_phase-reconstructed))
-	print(f'Max absolute error in height:{np.abs(height(true_phase[i], p=p, L=L, D=D)-height(reconstructed[i], p=p, L=L, D=D))}') #type: ignore
+	print(f'Max absolute error in height: {np.abs(height(true_phase[i], p=p, L=L, D=D)-height(reconstructed[i], p=p, L=L, D=D))}') #type: ignore
 	
 	plt.plot(y, reconstructed, label=r'Reconstructed $\Delta \phi$')
 	plt.plot(y, true_phase, label=r'True $\Delta \phi$')

@@ -4,6 +4,7 @@ from skimage.restoration import unwrap_phase
 
 from fourier import Fourier
 
+
 class FTP:
 
     def __init__(self, image: np.ndarray, image_ref: np.ndarray, step_x: float, step_y: float,
@@ -17,13 +18,12 @@ class FTP:
                                 window_beta=window_beta, padding=padding,
                                 filter_width=filter_width)
 
-    def compute(self, verbose: bool = True) -> None:
+    def compute(self, plotting: bool = False, verbose: bool = True) -> None:
         """Executes the FTP algorithm on both signals."""
         self._fourier0.window()
         self._fourier0.pad() if self._fourier0._padding is not None else None
         self._fourier0.fft()
-        #self._fourier0.low_pass_filter()
-        #self._fourier0.plot()
+        self._fourier0.plot() if plotting else None
         self._fourier0.find_fundamental()
         self._fourier0.filter()
         self._fourier0.inverse_fft()
@@ -32,8 +32,7 @@ class FTP:
         self._fourier.window()
         self._fourier.pad() if self._fourier._padding is not None else None
         self._fourier.fft()
-        #self._fourier0.low_pass_filter()
-        #self._fourier.plot()
+        self._fourier.plot() if plotting else None
         self._fourier.find_fundamental()
         self._fourier.filter()
         self._fourier.inverse_fft()

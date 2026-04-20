@@ -28,7 +28,7 @@ def phase_square(y: float) -> float:
 phase_square = np.vectorize(phase_square)
 
 def phase_sine(y: float) -> float:
-	h = 0.001 * np.sin((2*np.pi/0.0125) * y)
+	h = 0.001 * np.sin((2*np.pi/0.025) * y)
 	return ((((2*np.pi)/p) * D) * h) / (h - L)
 phase_sine = np.vectorize(phase_sine)
 
