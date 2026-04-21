@@ -6,7 +6,7 @@ class Fourier:
     def __init__(self, signal: np.ndarray, step_x: float, step_y: float,
                  window_beta: float, padding: float | None,
                  filter_width: float=4) -> None:
-        self._signal = signal
+        self._signal = signal - np.mean(signal) # centred right away
         self._step_x = step_x
         self._step_y = step_y
         

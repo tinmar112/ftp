@@ -3,10 +3,11 @@ import numpy as np
 from typing import Callable
 
 from ftp import FTP
-from sinusoidal import SinusoidalImage
 from height import height
+from sinusoidal import SinusoidalImage
 
 from parameters import p, L, D, A, phase0, x_min, x_max, y_min, y_max, Nx, Ny
+from parameters import phase_dimple as phase
 
 
 def test(phase: Callable[[float], float], window_beta: float,
@@ -46,3 +47,7 @@ def test(phase: Callable[[float], float], window_beta: float,
 	plt.legend()
 	plt.title(f'$p = {p}$ m')
 	plt.show()
+
+if __name__ == '__main__':
+    test(phase=phase, window_beta=3, padding=0.1, filter_width=0.634)
+    
