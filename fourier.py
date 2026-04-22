@@ -80,8 +80,8 @@ class Fourier:
                   self.FY_shifted.min(), self.FY_shifted.max())
         plt.imshow(spectrum, cmap='jet', extent=extent, aspect='auto')
         plt.title('Frequency Spectrum')
-        plt.xlabel(r'$f_x \: (Hz)$')
-        plt.ylabel(r'$f_y \: (Hz)$')
+        plt.xlabel(r'$f_x \: (m^{—1})$')
+        plt.ylabel(r'$f_y \: (m^{—1})$')
         plt.colorbar()
         plt.show()
 
@@ -98,7 +98,7 @@ class Fourier:
 
         sigma = self._filter_width * self.fund_y
 
-        G_X = np.exp(-(self.FX - self.fund_x)**2/(2 * sigma ** 2))
+        G_X = np.ones(shape=self.FX.shape, dtype=float)
         G_Y = np.exp(-(self.FY - self.fund_y)**2/(2 * sigma ** 2))
         
         coefficients = G_X * G_Y

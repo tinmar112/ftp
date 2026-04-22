@@ -18,12 +18,12 @@ class FTP:
                                 window_beta=window_beta, padding=padding,
                                 filter_width=filter_width)
 
-    def compute(self, plotting: bool = False, verbose: bool = True) -> None:
+    def compute(self, plot_spectrum: bool = False, verbose: bool = True) -> None:
         """Executes the FTP algorithm on both signals."""
         self._fourier0.window()
         self._fourier0.pad() if self._fourier0._padding is not None else None
         self._fourier0.fft()
-        self._fourier0.plot() if plotting else None
+        self._fourier0.plot() if plot_spectrum else None
         self._fourier0.find_fundamental()
         self._fourier0.filter()
         self._fourier0.inverse_fft()
@@ -32,8 +32,9 @@ class FTP:
         self._fourier.window()
         self._fourier.pad() if self._fourier._padding is not None else None
         self._fourier.fft()
-        self._fourier.plot() if plotting else None
+        self._fourier.plot() if plot_spectrum else None
         self._fourier.find_fundamental()
+        #self._fourier.fund_y = self._fourier0.fund_y
         self._fourier.filter()
         self._fourier.inverse_fft()
         self._fourier.unpad() if self._fourier._padding is not None else None
