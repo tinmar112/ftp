@@ -1,31 +1,22 @@
 import numpy as np
-import matplotlib.pyplot as plt
-
-from PIL import Image
-
-from ftp import FTP
-from height import height
+from read_surface import SurfaceReader
 
 if __name__ == '__main__':
-    
-    jpg0 = Image.open('./photos/30deg/more-fringes-ref.jpg').convert('L')  # 'L' mode converts to grayscale
-    jpg = Image.open('./photos/30deg/more-fringes.jpg').convert('L')
-    
-    im0, im = np.array(jpg0), np.array(jpg)
 
-    step = 3.65e-5 # m/pixel
-    ftp = FTP(image=im, image_ref=im0, step_x=step, step_y=step,
-              window_beta=3, padding=0.1, filter_width=0.634)
+    path_ref = './photos/30deg/more-fringes-ref.jpg'
+    path = './photos/30deg/more-fringes.jpg'
+    step = 3.65e-5  # m/pixel
+    L = 0.65        # m
+    D = 0.067       # m
+
+    surface_reader = SurfaceReader(path=path, path_ref=path_ref, step=step)
+
+    # creating the expected profile
+    expected_profile = np.zeros(shape=surface_reader._image_ref.shape)
+    half_triangle = np.linspace(0, 2.25*np.tan(np.pi/6),num=754) # 30-degree triangle
+    triangle = np.append(half_triangle, half_triangle[::-1])
+    expected_profile[1242:1242+754*2, :1491] = triangle[:, np.newaxis]
     
-    ftp.compute(plot_spectrum=False)
-    delta_phi = ftp.phase_diff()
+    surface_reader.read(L=L, D=D)
 
-    profile = height(delta_phi=delta_phi, p = ftp.p, L = 0.65, D = 0.067)
-
-    extent = (0, profile.shape[1] * step, 0, profile.shape[0] * step)
-    plt.imshow(profile, cmap='jet', extent=extent)
-    plt.title('Height profile')
-    plt.xlabel(r'$x \: (m)$')
-    plt.ylabel(r'$y \: (m)$')
-    plt.colorbar(label='m')
-    plt.show()
+    surface_reader.compare_with(expected_profile=expected_profile)
