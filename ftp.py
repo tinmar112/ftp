@@ -47,6 +47,11 @@ class FTP:
             print(f"Fundamental wavelength for x: {1/self._fourier.fund_x} m")
             print(f"Fundamental wavelength for y: {1/self._fourier.fund_y} m" + "\n")
     
+    @property
+    def p(self) -> float:
+        """Returns the wavelength of the fringe pattern."""
+        return 1/self._fourier0.fund_y
+
     def phase_diff(self) -> np.ndarray:
         """Computes the phase difference between the two images."""
 
