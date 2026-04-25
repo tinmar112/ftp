@@ -48,9 +48,9 @@ class SurfaceReader:
 
         # displaying
         extent = (0, error.shape[1] * self._step, 0, error.shape[0] * self._step)
-        plt.imshow(error, cmap='gray', extent=extent)
+        plt.imshow(error/1e-3, cmap='gray', extent=extent)
         plt.title('Height error = Reconstructed - Expected')
         plt.xlabel(r'$x \: (m)$')
         plt.ylabel(r'$y \: (m)$')
-        plt.colorbar(label='Error (m)')
+        plt.colorbar(label='Error (mm)')
         plt.show()
