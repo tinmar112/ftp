@@ -1,6 +1,7 @@
 import numpy as np
 from surface_reader import SurfaceReader
 
+
 if __name__ == '__main__':
 
     path_ref = './photos/30deg/more-fringes-ref.jpg'
@@ -18,6 +19,6 @@ if __name__ == '__main__':
     triangle = np.append(half_triangle, half_triangle[::-1])
     expected_profile[1242:1242+754*2, :1491] = triangle[:, np.newaxis]
     
-    surface_reader.read(L=L, D=D)
+    surface_reader.read(L=L, D=D, average=True)
 
     surface_reader.compare_with(expected_profile=expected_profile)

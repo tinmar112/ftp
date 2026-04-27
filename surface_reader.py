@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 
 from PIL import Image
 
+from scipy.ndimage import uniform_filter # type: ignore
+
 from ftp import FTP
 from height import height
 
@@ -18,7 +20,7 @@ class SurfaceReader:
         self._image_ref: np.ndarray = np.array(jpg0)
         self._image: np.ndarray = np.array(jpg)
 
-    def read(self, L: float, D: float) -> None:
+    def read(self, L: float, D: float, average: bool) -> None:
         """Reads the surface profile by FTP and displays it."""
 
         ftp = FTP(image=self._image, image_ref=self._image_ref,
@@ -32,6 +34,9 @@ class SurfaceReader:
                          p=ftp.p, L=L, D=D)
         
         self._profile = profile
+
+        if average:
+            self._profile = uniform_filter(self._profile, size=5, mode='constant')
         
         # displaying
         extent = (0, profile.shape[1] * self._step, 0, profile.shape[0] * self._step)
@@ -45,6 +50,8 @@ class SurfaceReader:
     def compare_with(self, expected_profile: np.ndarray) -> None:
 
         error = self._profile - expected_profile
+        
+        print(error.sum().sum())
 
         # displaying
         extent = (0, error.shape[1] * self._step, 0, error.shape[0] * self._step)
