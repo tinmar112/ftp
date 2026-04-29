@@ -21,7 +21,8 @@ class SurfaceReader:
         self._image: np.ndarray = np.array(jpg)
 
     def read(self, filter_width: float,
-             L: float, D: float, average: bool) -> None:
+             L: float, D: float, average: bool,
+             show: bool = True) -> None:
         """Reads the surface profile by FTP and displays it."""
 
         ftp = FTP(image=self._image, image_ref=self._image_ref,
@@ -35,18 +36,19 @@ class SurfaceReader:
         self._profile = height(delta_phi=delta_phi, p=ftp.p, L=L, D=D)
 
         if average:
-            self._profile = uniform_filter(self._profile, size=3, mode='constant', axes=0)
-            self._profile = uniform_filter(self._profile, size=5, mode='constant', axes=1)
+            self._profile = uniform_filter(self._profile, size=10, mode='constant', axes=0) # axes 0 is for y!
+            self._profile = uniform_filter(self._profile, size=5, mode='constant', axes=1) # axes 1 is for x!
         
-        # displaying
-        profile = self._profile
-        extent = (0, profile.shape[1] * self._step / 1e-3, 0, profile.shape[0] * self._step / 1e-3) # type: ignore
-        plt.imshow(profile/1e-3, cmap='jet', extent=extent)
-        plt.title('Height profile')
-        plt.xlabel(r'$x \: (mm)$')
-        plt.ylabel(r'$y \: (mm)$')
-        plt.colorbar(label='Height (mm)')
-        plt.show()
+        if show:
+            # displaying
+            profile = self._profile
+            extent = (0, profile.shape[1] * self._step / 1e-3, 0, profile.shape[0] * self._step / 1e-3) # type: ignore
+            plt.imshow(profile/1e-3, cmap='jet', extent=extent)
+            plt.title('Height profile')
+            plt.xlabel(r'$x \: (mm)$')
+            plt.ylabel(r'$y \: (mm)$')
+            plt.colorbar(label='Height (mm)')
+            plt.show()
     
     def error(self, expected_profile: np.ndarray, show: str ) -> float:
 
