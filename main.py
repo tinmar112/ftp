@@ -21,13 +21,6 @@ if __name__ == '__main__':
 
     # read profile + compare to reality
     surface_reader = SurfaceReader(path=path, path_ref=path_ref, step=step)
-    #widths = np.linspace(0.31, 0.4, 20)
-    #errors = np.array([])
-    #for width in widths:
-    #    surface_reader.read(filter_width=width, L=L, D=D, average=False, show=False)
-    #    error = surface_reader.error(expected_profile=expected_profile, show='1D')
-    #    errors = np.append(errors, error)
-    #print(widths[errors.argmin()])
 
-    surface_reader.read(filter_width=0.39, L=L, D=D, average=True)
+    surface_reader.read(filter_width=0.5, L=L, D=D, average=True)
     error = surface_reader.error(expected_profile=expected_profile, show='2D')

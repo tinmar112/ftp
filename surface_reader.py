@@ -27,7 +27,7 @@ class SurfaceReader:
 
         ftp = FTP(image=self._image, image_ref=self._image_ref,
                   step_x=self._step, step_y=self._step,
-                  window_beta=3, padding=0.1,
+                  window_beta=4, padding=0.1,
                   filter_width=filter_width)
         
         ftp.compute(plot_spectrum=False)
