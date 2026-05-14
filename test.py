@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from typing import Callable
 
-from ftp import FTP
+from ftp2d import FTP2D
 from height import height
 from sinusoidal import SinusoidalImage
 
@@ -22,12 +22,10 @@ def test(phase: Callable[[float], float], window_beta: float,
 						phase=phase).generate(x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
 
 	# FTP algorithm
-	ftp = FTP(image=im, image_ref=im0, step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
+	ftp = FTP2D(image=im, image_ref=im0, step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
 		   window_beta=window_beta, padding=padding, filter_width=filter_width)
 
-	ftp.compute()
-
-	delta_phi = ftp.phase_diff()
+	delta_phi = ftp.compute()
 
 	# results plotting
 

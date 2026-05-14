@@ -1,11 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from typing import Literal
 
 from PIL import Image
 
 from scipy.ndimage import uniform_filter # type: ignore
 
-from ftp import FTP
+from ftp2d import FTP2D
+from ftp1d import FTP1D
 from height import height
 
 class SurfaceReader:
@@ -20,18 +22,25 @@ class SurfaceReader:
         self._image_ref: np.ndarray = np.array(jpg0)
         self._image: np.ndarray = np.array(jpg)
 
-    def read(self, filter_width: float,
+    def read(self, alg: Literal['1D', '2D'],
+             filter_width: float,
              L: float, D: float, average: bool,
              show: bool = True) -> None:
         """Reads the surface profile by FTP and displays it."""
 
-        ftp = FTP(image=self._image, image_ref=self._image_ref,
-                  step_x=self._step, step_y=self._step,
-                  window_beta=4, padding=0.1,
-                  filter_width=filter_width)
+        if alg == '2D':
+            ftp = FTP2D(image=self._image, image_ref=self._image_ref,
+                        step_x=self._step, step_y=self._step,
+                        window_beta=4, padding=0.1,
+                        filter_width=filter_width)
         
-        ftp.compute(plot_spectrum=False)
-        delta_phi = ftp.phase_diff()
+        elif alg == '1D':
+            ftp = FTP1D(image=self._image, image_ref=self._image_ref, #type: ignore
+                        step_x=self._step, step_y=self._step,
+                        window_beta=4, padding=0.1,
+                        filter_width=filter_width)
+        
+        delta_phi = ftp.compute()
 
         self._profile = height(delta_phi=delta_phi, p=ftp.p, L=L, D=D)
 
@@ -50,7 +59,7 @@ class SurfaceReader:
             plt.colorbar(label='Height (mm)')
             plt.show()
     
-    def error(self, expected_profile: np.ndarray, show: str ) -> float:
+    def error(self, expected_profile: np.ndarray, show: Literal['2D', '3D'] ) -> float:
 
         error = self._profile - expected_profile
 

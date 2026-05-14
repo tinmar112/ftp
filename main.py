@@ -22,5 +22,5 @@ if __name__ == '__main__':
     # read profile + compare to reality
     surface_reader = SurfaceReader(path=path, path_ref=path_ref, step=step)
 
-    surface_reader.read(filter_width=0.5, L=L, D=D, average=True)
+    surface_reader.read(alg='1D', filter_width=0.4, L=L, D=D, average=True)
     error = surface_reader.error(expected_profile=expected_profile, show='2D')
