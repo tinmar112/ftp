@@ -18,5 +18,5 @@ class FTP:
         pass
 
     @property
-    def p(self):
-        pass
+    def p(self) -> float:
+        return 0.

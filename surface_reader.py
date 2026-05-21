@@ -22,6 +22,9 @@ class SurfaceReader:
         self._image_ref: np.ndarray = np.array(jpg0)
         self._image: np.ndarray = np.array(jpg)
 
+        plt.imshow(self._image, cmap='gray')
+        plt.show()
+
     def read(self, alg: Literal['1D', '2D'],
              filter_width: float,
              L: float, D: float, average: bool,
@@ -42,15 +45,15 @@ class SurfaceReader:
         
         delta_phi = ftp.compute()
 
-        self._profile = height(delta_phi=delta_phi, p=ftp.p, L=L, D=D)
+        self.profile = height(delta_phi=delta_phi, p=ftp.p, L=L, D=D)
 
         if average:
-            self._profile = uniform_filter(self._profile, size=10, mode='constant', axes=0) # axes 0 is for y!
-            self._profile = uniform_filter(self._profile, size=5, mode='constant', axes=1) # axes 1 is for x!
+            self._profile = uniform_filter(self.profile, size=10, mode='constant', axes=0) # axes 0 is for y!
+            self._profile = uniform_filter(self.profile, size=10, mode='constant', axes=1) # axes 1 is for x!
         
         if show:
             # displaying
-            profile = self._profile
+            profile = self.profile
             extent = (0, profile.shape[1] * self._step / 1e-3, 0, profile.shape[0] * self._step / 1e-3) # type: ignore
             plt.imshow(profile/1e-3, cmap='jet', extent=extent)
             plt.title('Height profile')
@@ -66,8 +69,8 @@ class SurfaceReader:
         if show == '2D':
             # Cross-section
             y = np.linspace(0, error.shape[0] * self._step, num=len(error))/1e-3
-            plt.plot(y, self._profile[:,1312]/1e-3, label='Reconstruction')
-            plt.plot(y, expected_profile[:,1312]/1e-3, label='Expected')
+            plt.plot(y, self.profile[:, error.shape[0]//2]/1e-3, label='Reconstruction')
+            plt.plot(y, expected_profile[:, error.shape[0]//2]/1e-3, label='Expected')
             plt.xlabel('y (mm)')
             plt.ylabel('Height (mm)')
             plt.title('Cross-section')

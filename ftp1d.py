@@ -1,5 +1,7 @@
 import numpy as np
 
+from skimage.restoration import unwrap_phase
+
 from ftp import FTP
 from fourier1d import Fourier1D
 
@@ -50,7 +52,8 @@ class FTP1D(FTP):
                 fourier.plot()
             
             fourier0.find_fundamental()
-            fourier.find_fundamental()
+            #fourier.find_fundamental()
+            fourier._fund = fourier0._fund
             
             fourier0.filter()
             fourier.filter()
@@ -65,13 +68,13 @@ class FTP1D(FTP):
 
             # Phase difference computation
             prod = fourier.inv * np.conjugate(fourier0.inv)
-            delta_phi = np.angle(prod)
-            delta_phi = np.unwrap(delta_phi)
+            line_phi = np.angle(prod)
 
             # add phase_diff slice
-            to_concat.append(delta_phi.reshape((-1, 1)))
+            to_concat.append(line_phi.reshape((-1, 1)))
         
-        return np.concatenate(to_concat, axis=1)
+        delta_phi = np.concatenate(to_concat, axis=1)
+        return unwrap_phase(delta_phi)
 
     @property
     def p(self) -> float:

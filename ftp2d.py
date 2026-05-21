@@ -51,14 +51,15 @@ class FTP2D(FTP):
             self._fourier.plot()
         
         self._fourier0.find_fundamental()
-        self._fourier.find_fundamental()
+        #self._fourier.find_fundamental()
+        self._fourier.fund_x = self._fourier0.fund_x
+        self._fourier.fund_y = self._fourier0.fund_y
 
         self._fourier0.filter()
         self._fourier.filter()
 
         self._fourier0.inverse_fft()
         self._fourier.inverse_fft()
-        #self._fourier.fund_y = self._fourier0.fund_y
         
         if self._fourier0._padding is not None:
             self._fourier0.unpad() 
