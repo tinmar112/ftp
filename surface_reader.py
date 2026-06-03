@@ -8,6 +8,7 @@ from scipy.ndimage import uniform_filter # type: ignore
 
 from ftp2d import FTP2D
 from ftp1d import FTP1D
+from interpolate import interpolate
 from height import height
 
 class SurfaceReader:
@@ -21,6 +22,8 @@ class SurfaceReader:
 
         self._image_ref: np.ndarray = np.array(jpg0)
         self._image: np.ndarray = np.array(jpg)
+
+        self._image = interpolate(im=self._image, im_ref=self._image_ref, r=0.22)
 
         plt.imshow(self._image, cmap='gray')
         plt.show()
@@ -48,8 +51,8 @@ class SurfaceReader:
         self.profile = height(delta_phi=delta_phi, p=ftp.p, L=L, D=D)
 
         if average:
-            self._profile = uniform_filter(self.profile, size=10, mode='constant', axes=0) # axes 0 is for y!
-            self._profile = uniform_filter(self.profile, size=10, mode='constant', axes=1) # axes 1 is for x!
+            self._profile = uniform_filter(self.profile, size=20, mode='constant', axes=0) # axes 0 is for y!
+            self._profile = uniform_filter(self.profile, size=20, mode='constant', axes=1) # axes 1 is for x!
         
         if show:
             # displaying
@@ -64,7 +67,7 @@ class SurfaceReader:
     
     def error(self, expected_profile: np.ndarray, show: Literal['2D', '3D'] ) -> float:
 
-        error = self._profile - expected_profile
+        error = self.profile - expected_profile
 
         if show == '2D':
             # Cross-section

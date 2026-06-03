@@ -4,11 +4,11 @@ from surface_reader import SurfaceReader
 
 if __name__ == '__main__':
 
-    path_ref = './photos/shell/shell-sc-ref.jpg'
-    path = './photos/shell/shell-sc.jpg'
-    step = 3.539e-5  # m/pixel
-    L = 65 * 1e-2    # m
-    D = 10 * 1e-2  # m
+    path_ref = './photos/shell/rimless-c-ref.jpg'
+    path = './photos/shell/rimless-c.jpg'
+    step = 2.08e-5  # m/pixel
+    L = 38.5 * 1e-2    # m
+    D = 7.67 * 1e-2  # m
 
 
     # read profile + compare to reality
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     for i, alg in enumerate(algs):
         for j, width in enumerate(widths):
             surface_reader.read(alg=alg, filter_width=width, #type: ignore
-                                L=L, D=D, average=False,
+                                L=L, D=D, average=True,
                                 show=False)
 
             ax = axs[i][j]
@@ -38,3 +38,7 @@ if __name__ == '__main__':
 
     plt.tight_layout()
     plt.show()
+
+    import numpy as np
+    surface_reader.read(alg='1D', filter_width=0.5, L=L, D=D, average=False, show=False)
+    surface_reader.error(expected_profile=np.zeros(shape=surface_reader.profile.shape),show='2D')
