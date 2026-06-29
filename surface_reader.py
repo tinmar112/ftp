@@ -12,6 +12,8 @@ from interpolate import interpolate
 from height import height
 
 class SurfaceReader:
+    """Used to read the surface, 
+    ie. apply the FTP algorithm to two images."""
 
     def __init__(self, step: float, path: str, path_ref: str) -> None:
         
@@ -23,7 +25,7 @@ class SurfaceReader:
         self._image_ref: np.ndarray = np.array(jpg0)
         self._image: np.ndarray = np.array(jpg)
 
-        self._image = interpolate(im=self._image, im_ref=self._image_ref, r=0.22)
+        #self._image = interpolate(im=self._image, im_ref=self._image_ref, r=0.22)
 
         plt.imshow(self._image, cmap='gray')
         plt.show()
@@ -46,7 +48,7 @@ class SurfaceReader:
                         window_beta=4, padding=0.1,
                         filter_width=filter_width)
         
-        delta_phi = ftp.compute()
+        delta_phi = ftp.compute(plot_spectrum=False)
 
         self.profile = height(delta_phi=delta_phi, p=ftp.p, L=L, D=D)
 

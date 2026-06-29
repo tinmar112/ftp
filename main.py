@@ -4,16 +4,16 @@ from surface_reader import SurfaceReader
 
 if __name__ == '__main__':
 
-    path_ref = './photos/shell/rimless-c-ref.jpg'
-    path = './photos/shell/rimless-c.jpg'
-    step = 2.08e-5  # m/pixel
-    L = 38.5 * 1e-2    # m
-    D = 7.67 * 1e-2  # m
+    path_ref = './photos/phantom/DSC_8106.jpg'
+    path = './photos/phantom/DSC_8107.jpg'
+    step = 4.7e-5  # m/pixel
+    L = 97 * 1e-2    # m
+    D = 20 * 1e-2  # m
 
 
     # read profile + compare to reality
     surface_reader = SurfaceReader(path=path, path_ref=path_ref, step=step)
-    widths = [0.06, 0.1, 0.2, 0.3, 0.5, 0.8]
+    widths = [0.35, 0.40, 0.45, 0.50, 0.55, 0.60]
     algs = ['1D', '2D']
 
     fig, axs = plt.subplots(nrows=len(algs), ncols=len(widths),
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     for i, alg in enumerate(algs):
         for j, width in enumerate(widths):
             surface_reader.read(alg=alg, filter_width=width, #type: ignore
-                                L=L, D=D, average=True,
+                                L=L, D=D, average=False,
                                 show=False)
 
             ax = axs[i][j]
@@ -40,5 +40,5 @@ if __name__ == '__main__':
     plt.show()
 
     import numpy as np
-    surface_reader.read(alg='1D', filter_width=0.5, L=L, D=D, average=False, show=False)
+    surface_reader.read(alg='2D', filter_width=0.6, L=L, D=D, average=False, show=False)
     surface_reader.error(expected_profile=np.zeros(shape=surface_reader.profile.shape),show='2D')
