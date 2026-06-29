@@ -1,26 +1,44 @@
-import numpy as np
+import matplotlib.pyplot as plt
 from surface_reader import SurfaceReader
 
 
 if __name__ == '__main__':
 
-    path_ref = './photos/60deg/60deg-100f-ref.jpg'
-    path = './photos/60deg/60deg-100f.jpg'
-    step = 3.8e-5  # m/pixel
-    L = 45 * 1e-2        # m
-    D = 67 * 1e-3        # m
+    path_ref = './photos/phantom/DSC_8106.jpg'
+    path = './photos/phantom/DSC_8107.jpg'
+    step = 4.7e-5  # m/pixel
+    L = 97 * 1e-2    # m
+    D = 20 * 1e-2  # m
 
-    # creating the expected profile
-    end_x, start_y, width = 1508, 260, 1442
-    base, angle = 5.45e-2, np.pi/3
-
-    expected_profile = np.zeros(shape=(3400,2400))
-    half_triangle = np.linspace(0, (base/2)*np.tan(angle),num=width//2) # 30-degree triangle
-    triangle = np.append(half_triangle, half_triangle[::-1])
-    expected_profile[start_y: start_y+width, :end_x] = triangle[:, np.newaxis]
 
     # read profile + compare to reality
     surface_reader = SurfaceReader(path=path, path_ref=path_ref, step=step)
+    widths = [0.35, 0.40, 0.45, 0.50, 0.55, 0.60]
+    algs = ['1D', '2D']
 
-    surface_reader.read(filter_width=0.5, L=L, D=D, average=True)
-    error = surface_reader.error(expected_profile=expected_profile, show='2D')
+    fig, axs = plt.subplots(nrows=len(algs), ncols=len(widths),
+                            figsize=(4 * len(widths), 4 * len(algs)),
+                            squeeze=False)
+
+    for i, alg in enumerate(algs):
+        for j, width in enumerate(widths):
+            surface_reader.read(alg=alg, filter_width=width, #type: ignore
+                                L=L, D=D, average=False,
+                                show=False)
+
+            ax = axs[i][j]
+            profile = surface_reader.profile
+            extent = (0, profile.shape[1] * step / 1e-3,
+                      0, profile.shape[0] * step / 1e-3)
+
+            im = ax.imshow(profile / 1e-3, cmap='jet', extent=extent)
+            ax.set_title(f'{alg}, width={width}')
+            ax.set_xlabel('x (mm)')
+            ax.set_ylabel('y (mm)')
+
+    plt.tight_layout()
+    plt.show()
+
+    import numpy as np
+    surface_reader.read(alg='2D', filter_width=0.6, L=L, D=D, average=False, show=False)
+    surface_reader.error(expected_profile=np.zeros(shape=surface_reader.profile.shape),show='2D')

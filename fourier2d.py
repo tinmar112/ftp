@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-class Fourier:
+
+class Fourier2D:
 
     def __init__(self, signal: np.ndarray, step_x: float, step_y: float,
                  window_beta: float, padding: float | None,

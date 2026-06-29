@@ -2,10 +2,12 @@ import numpy as np
 from tqdm import tqdm # type: ignore
 from typing import Callable
 
-from ftp import FTP
+from ftp2d import FTP2D
+from ftp1d import FTP1D
 from sinusoidal import SinusoidalImage
 
 from parameters import p, A, phase0, x_min, x_max, y_min, y_max, Nx, Ny
+from parameters import phase_dimple
 
 
 def grid_search(phase: Callable[[float], float], params: dict) -> tuple:
@@ -25,13 +27,12 @@ def grid_search(phase: Callable[[float], float], params: dict) -> tuple:
     
     for (window_beta, padding, filter_width) in tqdm(grid):
         
-        ftp = FTP(image=im, image_ref=im0, step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
+        ftp = FTP2D(image=im, image_ref=im0, step_x=(x_max-x_min)/Nx, step_y=(y_max-y_min)/Ny,
 		  window_beta=window_beta, padding=padding, filter_width=filter_width)
         
-        ftp.compute(verbose=False)
-        delta_phi = ftp.phase_diff()
+        delta_phi = ftp.compute()
 
-        score = np.linalg.norm(delta_phi[:,0]-phase(Y[:,0]), ord=2)
+        score = np.linalg.norm(delta_phi[:,0]-phase(Y[:,0]), ord=2) #type: ignore
         
         if score < min:
             min = score # type: ignore
