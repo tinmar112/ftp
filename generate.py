@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
 from sinusoidal import SinusoidalImage
 
@@ -10,7 +9,7 @@ p = 5e-3
 
 def A(x: float, y: float) -> float:
 	"""Amplitude of the sine wave"""
-	return np.cos((2*np.pi/lambda_x)*x + y)
+	return 1.
 
 # translation invariance along x: phase independent of x
 def phase0(y: float) -> float:
@@ -22,17 +21,18 @@ def phase1(y: float) -> float:
     return (10*y)
 
 # image bounds
-x_min, x_max = 0., 2 * lambda_x
-y_min, y_max = 0., 10 * p
-Nx, Ny = 500, 500
+x_min, x_max = 0., 10 * lambda_x
+y_min, y_max = 0., 40 * p # change here to get the number of fringes you want
+Nx, Ny = 1080, 1920
 
 # image generation
 
 X, Y, image = SinusoidalImage(wavelength=p,
-						amplitude=A,
-						phase=phase0).generate(x_min=x_min, x_max=x_max,
-							 y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
+							  amplitude=A,
+							  phase=phase0).generate(x_min=x_min, x_max=x_max,
+													 y_min=y_min, y_max=y_max, Nx=Nx, Ny=Ny)
 
 plt.imshow(image, cmap='gray')
+
 plt.axis('off')
 plt.show()

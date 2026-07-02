@@ -27,7 +27,7 @@ class Fourier1D:
         self.inv: np.ndarray = np.empty(shape=signal.shape, dtype=np.complex128)
     
     def pad(self) -> None:
-        """Adds 0-padding to the signal."""
+        """Adds 0-padding to the column."""
         assert self._padding is not None
         p = len(self._signal)
         p = int(self._padding * p)
@@ -36,13 +36,13 @@ class Fourier1D:
         self._pad = p
 
     def window(self) -> None:
-        """Applies a Kaiser window to the image."""
+        """Applies a Kaiser window to the column."""
 
         window = np.kaiser(len(self._signal), beta=self._window_beta)
         self._signal = self._signal * window
 
     def fft(self) -> None:
-        """Applies the FTP algorithm to an image (2D Numpy ndarray format)."""
+        """Computes the FFT of one column (1D Numpy ndarray format)."""
 
         # Remove background
         signal = self._signal - np.mean(self._signal) # Replace with B in real algorithm!
@@ -63,13 +63,13 @@ class Fourier1D:
         plt.show()
 
     def find_fundamental(self):
-        """Finds the fundamental frequency."""
+        """Finds the frequency of the fringes in the column."""
 
         i = np.abs(self._transform).argmax()
         self._fund = np.abs(self._f[i]) # positive frequency
 
     def filter(self) -> None:
-        """Filters out the fundamental frequency."""
+        """Filters out the frequency of the fringes."""
 
         sigma = self._filter_width * self._fund
 
@@ -78,7 +78,7 @@ class Fourier1D:
         self._transform = gaussian * self._transform # element-wise multiplication
         
     def inverse_fft(self) -> None:
-        """Computes the inverse FFT of the processed image."""
+        """Computes the inverse FFT of the processed column FFT."""
         
         self.inv = np.fft.ifft(self._transform) # use the unshifted transform
 

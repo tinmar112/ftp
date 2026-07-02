@@ -15,7 +15,8 @@ class SurfaceReader:
     """Used to read the surface, 
     ie. apply the FTP algorithm to two images."""
 
-    def __init__(self, step: float, path: str, path_ref: str) -> None:
+    def __init__(self, step: float, path: str, path_ref: str,
+                 shadow_r: float = 0.22) -> None:
         
         self._step = step
 
@@ -25,7 +26,7 @@ class SurfaceReader:
         self._image_ref: np.ndarray = np.array(jpg0)
         self._image: np.ndarray = np.array(jpg)
 
-        #self._image = interpolate(im=self._image, im_ref=self._image_ref, r=0.22)
+        self._image = interpolate(im=self._image, im_ref=self._image_ref, r=shadow_r)
 
         plt.imshow(self._image, cmap='gray')
         plt.show()
@@ -68,6 +69,7 @@ class SurfaceReader:
             plt.show()
     
     def error(self, expected_profile: np.ndarray, show: Literal['2D', '3D'] ) -> float:
+        """Compares the reconstructed FTP profile to the expected profile."""
 
         error = self.profile - expected_profile
 
@@ -80,6 +82,8 @@ class SurfaceReader:
             plt.ylabel('Height (mm)')
             plt.title('Cross-section')
             plt.legend()
+            ax = plt.gca()
+            ax.set_aspect('equal')
             plt.show()
 
         elif show == '3D':

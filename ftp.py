@@ -2,6 +2,8 @@ import numpy as np
 
 
 class FTP:
+    """Defines the base `FTP` class. 
+    Provides a shared interface for FTP implementations"""
 
     def __init__(self, image: np.ndarray, image_ref: np.ndarray, step_x: float, step_y: float,
                  window_beta: float, padding: float | None, filter_width: float) -> None:

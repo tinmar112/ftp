@@ -51,7 +51,7 @@ class Fourier2D:
         self._signal = self._signal * window_2D
 
     def fft(self) -> None:
-        """Applies the FTP algorithm to an image (2D Numpy ndarray format)."""
+        """Computes the FFT of the image (2D Numpy ndarray format)."""
 
         # Remove background
         signal = self._signal - np.mean(self._signal) # Replace with B in real algorithm!

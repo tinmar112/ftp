@@ -1,19 +1,20 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from surface_reader import SurfaceReader
 
 
 if __name__ == '__main__':
 
-    path_ref = './photos/phantom/DSC_8106.jpg'
-    path = './photos/phantom/DSC_8107.jpg'
-    step = 4.7e-5  # m/pixel
-    L = 97 * 1e-2    # m
-    D = 20 * 1e-2  # m
+    path_ref = './photos/nikon/dimple4/dimple4-40v-undef.jpg'
+    path = './photos/nikon/dimple4/dimple4-40v-shell.jpg'
+    step = 4.40e-5  # m/pixel
+    L = 90 * 1e-2  # m
+    D = 21 * 1e-2  # m
 
 
     # read profile + compare to reality
-    surface_reader = SurfaceReader(path=path, path_ref=path_ref, step=step)
-    widths = [0.35, 0.40, 0.45, 0.50, 0.55, 0.60]
+    surface_reader = SurfaceReader(path=path, path_ref=path_ref, step=step, shadow_r=0.22)
+    widths = [0.35, 0.375, 0.4, 0.425, 0.45, 0.475, 0.5]
     algs = ['1D', '2D']
 
     fig, axs = plt.subplots(nrows=len(algs), ncols=len(widths),
@@ -39,6 +40,18 @@ if __name__ == '__main__':
     plt.tight_layout()
     plt.show()
 
-    import numpy as np
-    surface_reader.read(alg='2D', filter_width=0.6, L=L, D=D, average=False, show=False)
-    surface_reader.error(expected_profile=np.zeros(shape=surface_reader.profile.shape),show='2D')
+    surface_reader.read(alg='2D', filter_width=0.40, L=L, D=D, average=False, show=False)
+    
+    center = (1310, 1356)
+    radius = 569
+    yy, xx = np.indices(surface_reader.profile.shape)
+    rr = np.sqrt((xx - center[1])**2 + (yy - center[0])**2)
+    expected_profile = np.zeros(surface_reader.profile.shape, dtype=float)
+    mask = rr <= radius
+    expected_profile[mask] = np.sqrt(radius**2 - rr[mask]**2)
+    expected_profile[mask] = expected_profile[mask] * step
+    expected_profile[mask] = expected_profile[mask] + 4e-3 # add base height if applicable
+
+    # Uncomment when tracking with respect to an undeformed shell
+    #surface_reader.profile = expected_profile + surface_reader.profile
+    surface_reader.error(expected_profile=expected_profile, show='2D')
