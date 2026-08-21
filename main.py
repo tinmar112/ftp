@@ -53,5 +53,6 @@ if __name__ == '__main__':
     expected_profile[mask] = expected_profile[mask] + 4e-3 # add base height if applicable
 
     # Uncomment when tracking with respect to an undeformed shell
-    #surface_reader.profile = expected_profile + surface_reader.profile
+    surface_reader.profile = expected_profile + surface_reader.profile
+
     surface_reader.error(expected_profile=expected_profile, show='2D')
