@@ -1,13 +1,11 @@
+from collections.abc import Callable
+
 import numpy as np
-from tqdm import tqdm # type: ignore
-from typing import Callable
+from tqdm import tqdm  # type: ignore
 
 from ftp2d import FTP2D
-from ftp1d import FTP1D
+from parameters import A, Nx, Ny, p, phase0, phase_dimple, x_max, x_min, y_max, y_min
 from sinusoidal import SinusoidalImage
-
-from parameters import p, A, phase0, x_min, x_max, y_min, y_max, Nx, Ny
-from parameters import phase_dimple
 
 
 def grid_search(phase: Callable[[float], float], params: dict) -> tuple:

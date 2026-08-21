@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from surface_reader import SurfaceReader
 
+from surface_reader import SurfaceReader
 
 if __name__ == '__main__':
 

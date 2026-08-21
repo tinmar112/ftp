@@ -1,9 +1,8 @@
 import numpy as np
-
 from skimage.restoration import unwrap_phase
 
-from ftp import FTP
 from fourier1d import Fourier1D
+from ftp import FTP
 
 
 class FTP1D(FTP):

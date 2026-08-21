@@ -1,13 +1,11 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 from ftp1d import FTP1D
-from sinusoidal import SinusoidalImage
 from height import height
-
-from parameters import p, L, D, A, phase0, x_min, x_max, y_min, y_max, Nx, Ny
+from parameters import A, D, L, Nx, Ny, p, phase0, x_max, x_min, y_max, y_min
 from parameters import phase_dimple as phase
-
+from sinusoidal import SinusoidalImage
 
 X0, Y0, im0 = SinusoidalImage(wavelength=p, amplitude=A, 
                               phase=phase0).generate(x_min=x_min, x_max=x_max,

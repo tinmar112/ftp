@@ -1,15 +1,15 @@
-import numpy as np
-import matplotlib.pyplot as plt
 from typing import Literal
 
+import matplotlib.pyplot as plt
+import numpy as np
 from PIL import Image
+from scipy.ndimage import uniform_filter  # type: ignore
 
-from scipy.ndimage import uniform_filter # type: ignore
-
-from ftp2d import FTP2D
 from ftp1d import FTP1D
-from interpolate import interpolate
+from ftp2d import FTP2D
 from height import height
+from interpolate import interpolate
+
 
 class SurfaceReader:
     """Used to read the surface, 

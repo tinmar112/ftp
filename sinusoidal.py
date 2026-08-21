@@ -1,6 +1,6 @@
-import numpy as np
+from collections.abc import Callable
 
-from typing import Callable
+import numpy as np
 
 
 class SinusoidalImage:

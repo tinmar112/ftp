@@ -1,13 +1,13 @@
+from collections.abc import Callable
+
 import matplotlib.pyplot as plt
 import numpy as np
-from typing import Callable
 
 from ftp2d import FTP2D
 from height import height
-from sinusoidal import SinusoidalImage
-
-from parameters import p, L, D, A, phase0, x_min, x_max, y_min, y_max, Nx, Ny
+from parameters import A, D, L, Nx, Ny, p, phase0, x_max, x_min, y_max, y_min
 from parameters import phase_dimple as phase
+from sinusoidal import SinusoidalImage
 
 
 def test(phase: Callable[[float], float], window_beta: float,

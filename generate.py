@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 
 from sinusoidal import SinusoidalImage
 
-
 # parameters
 lambda_x = 3e-2
 p = 5e-3

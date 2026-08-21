@@ -1,7 +1,4 @@
-import matplotlib.pyplot as plt
 import numpy as np
-
-from PIL import Image
 
 
 def interpolate(im: np.ndarray, im_ref, r: float = 0.23) -> np.ndarray:
